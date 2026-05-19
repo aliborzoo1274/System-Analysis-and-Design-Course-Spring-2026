@@ -9,6 +9,7 @@ class Student {
 public:
     Student();
     Student(int id, const string& name);
+    Student(int id, const string& name, const vector<int>& completedCourseIds);
 
     int getId() const;
     string getName() const;

@@ -12,9 +12,6 @@ shared_ptr<StudentRepository> StudentRepository::repo() {
 }
 
 StudentRepository::StudentRepository() {
-    AcademicRecord record1(vector<int>{101});
-    AcademicRecord record2(vector<int>{});
-
-    save(make_shared<Student>(1, "Ali", record1));
-    save(make_shared<Student>(2, "Amin", record2));
+    save(make_shared<Student>(1, "Ali", vector<int>{101}));
+    save(make_shared<Student>(2, "Amin", vector<int>{}));
 }
