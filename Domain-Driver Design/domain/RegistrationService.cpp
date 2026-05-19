@@ -110,11 +110,11 @@ ServiceResult RegistrationService::registerStudent(int studentId, int offeringId
         return ServiceResult::fail("Course not found.");
     }
 
-    if (student->getRecord().hasCompletedCourse(course->getId())) {
+    if (student->hasCompletedCourse(course->getId())) {
         return ServiceResult::fail("Course already completed.");
     }
 
-    if (!course->prerequisitesMet(student->getRecord())) {
+    if (!student->hasCompletedPrerequisites(course->getPrerequisiteCourseIds())) {
         return ServiceResult::fail("Prerequisites are not met.");
     }
 
@@ -205,11 +205,11 @@ ServiceResult RegistrationService::joinWaitlist(int studentId, int offeringId) {
         return ServiceResult::fail("Student is already on the waitlist.");
     }
 
-    if (student->getRecord().hasCompletedCourse(course->getId())) {
+    if (student->hasCompletedCourse(course->getId())) {
         return ServiceResult::fail("Course already completed.");
     }
 
-    if (!course->prerequisitesMet(student->getRecord())) {
+    if (!student->hasCompletedPrerequisites(course->getPrerequisiteCourseIds())) {
         return ServiceResult::fail("Prerequisites are not met.");
     }
 

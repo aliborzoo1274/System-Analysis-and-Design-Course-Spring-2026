@@ -22,12 +22,3 @@ string Course::getTitle() const {
 const vector<int>& Course::getPrerequisiteCourseIds() const {
     return prerequisiteCourseIds;
 }
-
-bool Course::prerequisitesMet(const AcademicRecord& record) const {
-    for (int courseId : prerequisiteCourseIds) {
-        if (!record.hasCompletedCourse(courseId)) {
-            return false;
-        }
-    }
-    return true;
-}

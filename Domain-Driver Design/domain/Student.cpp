@@ -6,9 +6,6 @@ Student::Student() : id(0) {}
 
 Student::Student(int id, const string& name) : id(id), name(name) {}
 
-Student::Student(int id, const string& name, const AcademicRecord& record)
-    : id(id), name(name), record(record) {}
-
 int Student::getId() const {
     return id;
 }
@@ -17,10 +14,21 @@ string Student::getName() const {
     return name;
 }
 
-AcademicRecord& Student::getRecord() {
-    return record;
+bool Student::hasCompletedCourse(int courseId) const {
+    return find(completedCourseIds.begin(), completedCourseIds.end(), courseId) != completedCourseIds.end();
 }
 
-const AcademicRecord& Student::getRecord() const {
-    return record;
+bool Student::hasCompletedPrerequisites(const vector<int>& prerequisites) {
+    for (auto courseId : completedCourseIds) {
+        if (!hasCompletedCourse(courseId)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+void Student::addCompletedCourse(int courseId) {
+    if (!hasCompletedCourse(courseId)) {
+        completedCourseIds.push_back(courseId);
+    }
 }

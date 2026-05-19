@@ -1,8 +1,7 @@
 #pragma once
 
-#include "AcademicRecord.hpp"
-
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -10,17 +9,17 @@ class Student {
 public:
     Student();
     Student(int id, const string& name);
-    Student(int id, const string& name, const AcademicRecord& record);
 
     int getId() const;
     string getName() const;
 
-    AcademicRecord& getRecord();
-    const AcademicRecord& getRecord() const;
+    bool hasCompletedCourse(int courseId) const;
+    bool hasCompletedPrerequisites(const vector<int>& prerequisites);
+    void addCompletedCourse(int courseId);
 
 private:
     int id;
     string name;
-    AcademicRecord record;
+    vector<int> completedCourseIds;
 
 };

@@ -1,7 +1,5 @@
 #pragma once
 
-#include "AcademicRecord.hpp"
-
 #include <string>
 #include <vector>
 
@@ -16,8 +14,6 @@ public:
     string getCode() const;
     string getTitle() const;
     const vector<int>& getPrerequisiteCourseIds() const;
-
-    bool prerequisitesMet(const AcademicRecord& record) const;
 
 private:
     int id;
