@@ -31,7 +31,6 @@ int main() {
 			cout
 				<< offer.offeringId << " | "
 				<< offer.courseCode << " | "
-				<< "Group " << offer.group << " | "
 				<< offer.classTime << " | "
 				<< offer.examTime << " | "
 				<< "Seats: " << offer.availableSeats
@@ -50,8 +49,7 @@ int main() {
 		cout << "Student schedule:" << "\n";
 		for (const auto& offer : registration.body.offerings) {
 			cout
-				<< offer.courseCode << " "
-				<< offer.group << " | "
+				<< offer.courseCode << " | "
 				<< offer.classTime
 				<< "\n";
 		}

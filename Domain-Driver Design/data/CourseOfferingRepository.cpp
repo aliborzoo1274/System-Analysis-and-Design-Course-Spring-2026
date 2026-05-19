@@ -28,10 +28,10 @@ CourseOfferingRepository::CourseOfferingRepository() {
         Time(11, 0));
     ExamTime math101ExamA(Date(2026, 6, 3), Time(9, 0), Time(11, 0));
 
-    auto offer1 = make_shared<CourseOffering>(1, 101, "A", cs101GroupA, cs101ExamA, 2);
-    auto offer2 = make_shared<CourseOffering>(2, 101, "B", cs101GroupB, cs101ExamB, 2);
-    auto offer3 = make_shared<CourseOffering>(3, 201, "A", cs201GroupA, cs201ExamA, 2);
-    auto offer4 = make_shared<CourseOffering>(4, 102, "A", math101GroupA, math101ExamA, 2);
+    auto offer1 = make_shared<CourseOffering>(1, 101, cs101GroupA, cs101ExamA, 2);
+    auto offer2 = make_shared<CourseOffering>(2, 101, cs101GroupB, cs101ExamB, 2);
+    auto offer3 = make_shared<CourseOffering>(3, 201, cs201GroupA, cs201ExamA, 2);
+    auto offer4 = make_shared<CourseOffering>(4, 102, math101GroupA, math101ExamA, 2);
 
     save(offer1);
     save(offer2);

@@ -11,11 +11,10 @@ using namespace std;
 class CourseOffering {
 public:
     CourseOffering();
-    CourseOffering(int id, int courseId, const string& group, const ClassTime& classTime, const ExamTime& examTime, int capacity);
+    CourseOffering(int id, int courseId, const ClassTime& classTime, const ExamTime& examTime, int capacity);
 
     int getId() const;
     int getCourseId() const;
-    string getGroup() const;
     const ClassTime& getClassTime() const;
     const ExamTime& getExamTime() const;
     int getCapacity() const;
@@ -37,7 +36,6 @@ public:
 private:
     int id;
     int courseId;
-    string group;
     ClassTime classTime;
     ExamTime examTime;
     int capacity;

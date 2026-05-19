@@ -10,7 +10,6 @@ struct CourseOfferingView {
     int courseId;
     string courseCode;
     string courseTitle;
-    string group;
     string classTime;
     string examTime;
     int capacity;

@@ -17,7 +17,6 @@ CourseOfferingView RegistrationController::toOfferingView(const shared_ptr<Cours
     view.courseId = offering->getCourseId();
     view.courseCode = course ? course->getCode() : "";
     view.courseTitle = course ? course->getTitle() : "";
-    view.group = offering->getGroup();
     view.classTime = offering->getClassTime().toString();
     view.examTime = offering->getExamTime().toString();
     view.capacity = offering->getCapacity();

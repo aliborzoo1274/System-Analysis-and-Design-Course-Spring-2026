@@ -6,8 +6,8 @@ using namespace std;
 
 CourseOffering::CourseOffering() : id(0), courseId(0), capacity(0) {}
 
-CourseOffering::CourseOffering(int id, int courseId, const string& group, const ClassTime& classTime, const ExamTime& examTime, int capacity)
-    : id(id), courseId(courseId), group(group), classTime(classTime), examTime(examTime), capacity(capacity) {}
+CourseOffering::CourseOffering(int id, int courseId, const ClassTime& classTime, const ExamTime& examTime, int capacity)
+    : id(id), courseId(courseId), classTime(classTime), examTime(examTime), capacity(capacity) {}
 
 int CourseOffering::getId() const {
     return id;
@@ -15,10 +15,6 @@ int CourseOffering::getId() const {
 
 int CourseOffering::getCourseId() const {
     return courseId;
-}
-
-string CourseOffering::getGroup() const {
-    return group;
 }
 
 const ClassTime& CourseOffering::getClassTime() const {
