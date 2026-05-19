@@ -126,7 +126,7 @@ Response<CourseInfoView> RegistrationController::courseInfo(int offeringId) {
 
     for (int prerequisiteId : course->getPrerequisiteCourseIds()) {
         auto prerequisite = service->getCourse(prerequisiteId);
-        view.prerequisites.push_back(prerequisite ? prerequisite->getCode() : to_string(prerequisiteId));
+        view.prerequisites.push_back(prerequisite ? prerequisite->getTitle() : to_string(prerequisiteId));
     }
 
     for (const auto& courseOffering : service->getOfferingsForCourse(course->getId())) {
