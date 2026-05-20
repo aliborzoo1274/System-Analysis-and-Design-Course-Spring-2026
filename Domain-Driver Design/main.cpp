@@ -9,6 +9,63 @@
 
 using namespace std;
 
+void initStudentRepo(shared_ptr<StudentRepository> studentRepo) {
+	studentRepo->save(make_shared<Student>(1, "Ali", vector<int>{101}));
+    studentRepo->save(make_shared<Student>(2, "Amin", vector<int>{}));
+}
+
+void initCourseRepo(shared_ptr<CourseRepository> courseRepo) {
+	courseRepo->save(make_shared<Course>(101, "CS101", "Intro to CS", vector<int>{}));
+    courseRepo->save(make_shared<Course>(102, "CS102", "Data Structures", vector<int>{101}));
+    courseRepo->save(make_shared<Course>(103, "CS103", "Algorithms", vector<int>{102}));
+    courseRepo->save(make_shared<Course>(201, "CS201", "Operating Systems", vector<int>{103}));
+    courseRepo->save(make_shared<Course>(202, "CS202", "Databases", vector<int>{102}));
+}
+
+void initOfferingRepo(shared_ptr<CourseOfferingRepository> offeringRepo) {
+	ClassTime cs101GroupA(
+        vector<DayOfWeek>{DayOfWeek::Monday, DayOfWeek::Wednesday},
+        Time(9, 0),
+        Time(10, 30));
+    ExamTime cs101ExamA(Date(2026, 6, 1), Time(9, 0), Time(11, 0));
+
+    ClassTime cs101GroupB(
+        vector<DayOfWeek>{DayOfWeek::Tuesday, DayOfWeek::Thursday},
+        Time(9, 0),
+        Time(10, 30));
+    ExamTime cs101ExamB(Date(2026, 6, 2), Time(9, 0), Time(11, 0));
+
+    ClassTime cs201GroupA(
+        vector<DayOfWeek>{DayOfWeek::Monday, DayOfWeek::Wednesday},
+        Time(10, 30),
+        Time(12, 0));
+    ExamTime cs201ExamA(Date(2026, 6, 1), Time(10, 0), Time(12, 0));
+
+    ClassTime math101GroupA(
+        vector<DayOfWeek>{DayOfWeek::Monday, DayOfWeek::Wednesday},
+        Time(9, 30),
+        Time(11, 0));
+    ExamTime math101ExamA(Date(2026, 6, 3), Time(9, 0), Time(11, 0));
+
+    offeringRepo->save(make_shared<CourseOffering>(1, 101, cs101GroupA, cs101ExamA, 2));
+    offeringRepo->save(make_shared<CourseOffering>(2, 101, cs101GroupB, cs101ExamB, 2));
+    offeringRepo->save(make_shared<CourseOffering>(3, 201, cs201GroupA, cs201ExamA, 2));
+    offeringRepo->save(make_shared<CourseOffering>(4, 102, math101GroupA, math101ExamA, 2));
+}
+
+void initRegistrationRepo(shared_ptr<RegistrationRepository> registrationRepo) {
+	return;
+}
+
+void initData(shared_ptr<StudentRepository> studentRepo, shared_ptr<CourseRepository> courseRepo,
+			  shared_ptr<CourseOfferingRepository> offeringRepo, shared_ptr<RegistrationRepository> registrationRepo) {
+
+	initStudentRepo(studentRepo);
+	initCourseRepo(courseRepo);
+	initOfferingRepo(offeringRepo);
+	initRegistrationRepo(registrationRepo);
+}
+
 void print_offerings(const vector<CourseOfferingView>& offerings) {
 	for (const auto& offer : offerings) {
 		cout
@@ -27,6 +84,8 @@ int main() {
 	auto courseRepo = CourseRepository::repo();
 	auto offeringRepo = CourseOfferingRepository::repo();
 	auto registrationRepo = RegistrationRepository::repo();
+
+	initData(studentRepo, courseRepo, offeringRepo, registrationRepo);
 
 	auto service = make_shared<RegistrationService>(
 		studentRepo,

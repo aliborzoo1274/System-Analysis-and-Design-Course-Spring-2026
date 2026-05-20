@@ -9,8 +9,6 @@ using namespace std;
 
 class RegistrationRepository : public BaseRepository<Registration> {
 public:
-    RegistrationRepository();
-
     static shared_ptr<RegistrationRepository> repo();
 
 private:

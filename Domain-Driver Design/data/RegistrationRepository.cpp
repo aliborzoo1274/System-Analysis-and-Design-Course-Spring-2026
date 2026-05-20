@@ -2,8 +2,6 @@
 
 shared_ptr<RegistrationRepository> RegistrationRepository::repo_ = nullptr;
 
-RegistrationRepository::RegistrationRepository() {}
-
 shared_ptr<RegistrationRepository> RegistrationRepository::repo() {
 
     if (repo_ == nullptr) {
