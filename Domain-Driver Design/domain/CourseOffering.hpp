@@ -22,16 +22,16 @@ public:
     int availableSeats() const;
     bool isFull() const;
 
-    bool isStudentRegistered(int studentId) const;
-    bool isStudentWaitlisted(int studentId) const;
+    bool isRegistrationConfirmed(int registrationId) const;
+    bool isRegistrationWaitlisted(int registrationId) const;
 
-    bool registerStudent(int studentId);
-    bool dropStudent(int studentId);
-    bool joinWaitlist(int studentId);
-    bool leaveWaitlist(int studentId);
+    bool confirmRegistration(int registrationId);
+    bool dropRegistration(int registrationId);
+    bool joinWaitlist(int registrationId);
+    bool leaveWaitlist(int registrationId);
 
-    const vector<int>& getRegisteredStudentIds() const;
-    const vector<int>& getWaitlistStudentIds() const;
+    const vector<int>& getConfirmedRegistrationIds() const;
+    const vector<int>& getWaitlistRegistrationIds() const;
 
 private:
     int id;
@@ -39,7 +39,7 @@ private:
     ClassTime classTime;
     ExamTime examTime;
     int capacity;
-    vector<int> registeredStudentIds;
-    vector<int> waitlistStudentIds;
+    vector<int> confirmedRegistrationIds;
+    vector<int> waitlistRegistrationIds;
     
 };

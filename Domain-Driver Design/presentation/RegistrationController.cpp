@@ -43,8 +43,8 @@ Response<vector<CourseOfferingView>> RegistrationController::viewAvailableOfferi
     return Response<vector<CourseOfferingView>>::success(result, "Available offerings loaded.");
 }
 
-Response<ResultView> RegistrationController::registerOffering(int studentId, int offeringId) {
-    auto result = service->registerStudent(studentId, offeringId);
+Response<ResultView> RegistrationController::registerOffering(int registrationId, int offeringId) {
+    auto result = service->confirmRegistration(registrationId, offeringId);
     ResultView view{result.success, result.message};
 
     if (result.success) {
@@ -55,7 +55,7 @@ Response<ResultView> RegistrationController::registerOffering(int studentId, int
 }
 
 Response<ResultView> RegistrationController::drop(int studentId, int offeringId) {
-    auto result = service->dropStudent(studentId, offeringId);
+    auto result = service->dropRegistration(studentId, offeringId);
     ResultView view{result.success, result.message};
 
     if (result.success) {
@@ -87,19 +87,17 @@ Response<ResultView> RegistrationController::leaveWaitlist(int studentId, int of
     return Response<ResultView>::failure(view, result.message);
 }
 
-Response<StudentRegistrationView> RegistrationController::getStudentRegistration(int studentId) {
-    auto student = service->getStudent(studentId);
-    if (!student) {
-        return Response<StudentRegistrationView>::failure("Student not found.");
-    }
-
-    auto registration = service->getStudentRegistration(studentId);
+Response<StudentRegistrationView> RegistrationController::getStudentRegistration(int registrationId) {
+    auto registration = service->getRegistration(registrationId);
     if (!registration) {
         return Response<StudentRegistrationView>::failure("Registration not found.");
     }
 
+    auto student = service->getStudent(registration->getStudentId());
+
     StudentRegistrationView view{};
-    view.studentId = student->getId();
+    view.registrationId = registrationId;
+    view.studentId = registration->getStudentId();
     view.studentName = student->getName();
 
     for (int offeringId : registration->getOfferingIds()) {

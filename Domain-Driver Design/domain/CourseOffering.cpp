@@ -30,63 +30,63 @@ int CourseOffering::getCapacity() const {
 }
 
 int CourseOffering::availableSeats() const {
-    return capacity - static_cast<int>(registeredStudentIds.size());
+    return capacity - static_cast<int>(confirmedRegistrationIds.size());
 }
 
 bool CourseOffering::isFull() const {
     return availableSeats() <= 0;
 }
 
-bool CourseOffering::isStudentRegistered(int studentId) const {
-    return find(registeredStudentIds.begin(), registeredStudentIds.end(), studentId) != registeredStudentIds.end();
+bool CourseOffering::isRegistrationConfirmed(int registrationId) const {
+    return find(confirmedRegistrationIds.begin(), confirmedRegistrationIds.end(), registrationId) != confirmedRegistrationIds.end();
 }
 
-bool CourseOffering::isStudentWaitlisted(int studentId) const {
-    return find(waitlistStudentIds.begin(), waitlistStudentIds.end(), studentId) != waitlistStudentIds.end();
+bool CourseOffering::isRegistrationWaitlisted(int registrationId) const {
+    return find(waitlistRegistrationIds.begin(), waitlistRegistrationIds.end(), registrationId) != waitlistRegistrationIds.end();
 }
 
-bool CourseOffering::registerStudent(int studentId) {
-    if (isFull() || isStudentRegistered(studentId)) {
+bool CourseOffering::confirmRegistration(int registrationId) {
+    if (isFull() || isRegistrationConfirmed(registrationId)) {
         return false;
     }
 
-    registeredStudentIds.push_back(studentId);
+    confirmedRegistrationIds.push_back(registrationId);
     return true;
 }
 
-bool CourseOffering::dropStudent(int studentId) {
-    auto it = find(registeredStudentIds.begin(), registeredStudentIds.end(), studentId);
-    if (it == registeredStudentIds.end()) {
+bool CourseOffering::dropRegistration(int registrationId) {
+    auto it = find(confirmedRegistrationIds.begin(), confirmedRegistrationIds.end(), registrationId);
+    if (it == confirmedRegistrationIds.end()) {
         return false;
     }
 
-    registeredStudentIds.erase(it);
+    confirmedRegistrationIds.erase(it);
     return true;
 }
 
-bool CourseOffering::joinWaitlist(int studentId) {
-    if (isStudentRegistered(studentId) || isStudentWaitlisted(studentId)) {
+bool CourseOffering::joinWaitlist(int registrationId) {
+    if (isRegistrationConfirmed(registrationId) || isRegistrationWaitlisted(registrationId)) {
         return false;
     }
 
-    waitlistStudentIds.push_back(studentId);
+    waitlistRegistrationIds.push_back(registrationId);
     return true;
 }
 
-bool CourseOffering::leaveWaitlist(int studentId) {
-    auto it = find(waitlistStudentIds.begin(), waitlistStudentIds.end(), studentId);
-    if (it == waitlistStudentIds.end()) {
+bool CourseOffering::leaveWaitlist(int registrationId) {
+    auto it = find(waitlistRegistrationIds.begin(), waitlistRegistrationIds.end(), registrationId);
+    if (it == waitlistRegistrationIds.end()) {
         return false;
     }
 
-    waitlistStudentIds.erase(it);
+    waitlistRegistrationIds.erase(it);
     return true;
 }
 
-const vector<int>& CourseOffering::getRegisteredStudentIds() const {
-    return registeredStudentIds;
+const vector<int>& CourseOffering::getConfirmedRegistrationIds() const {
+    return confirmedRegistrationIds;
 }
 
-const vector<int>& CourseOffering::getWaitlistStudentIds() const {
-    return waitlistStudentIds;
+const vector<int>& CourseOffering::getWaitlistRegistrationIds() const {
+    return waitlistRegistrationIds;
 }

@@ -57,7 +57,8 @@ void initOfferingRepo(shared_ptr<CourseOfferingRepository> offeringRepo) {
 }
 
 void initRegistrationRepo(shared_ptr<RegistrationRepository> registrationRepo) {
-	return;
+	registrationRepo->save(make_shared<Registration>(1, 1));
+	registrationRepo->save(make_shared<Registration>(2, 2));
 }
 
 void initData(shared_ptr<StudentRepository> studentRepo, shared_ptr<CourseRepository> courseRepo,

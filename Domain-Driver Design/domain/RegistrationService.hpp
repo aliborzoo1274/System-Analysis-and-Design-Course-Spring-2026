@@ -32,12 +32,12 @@ public:
 
     vector<shared_ptr<CourseOffering>> getAvailableOfferings(int studentId);
 
-    ServiceResult registerStudent(int studentId, int offeringId);
-    ServiceResult dropStudent(int studentId, int offeringId);
-    ServiceResult joinWaitlist(int studentId, int offeringId);
-    ServiceResult leaveWaitlist(int studentId, int offeringId);
+    ServiceResult confirmRegistration(int registrationId, int offeringId);
+    ServiceResult dropRegistration(int registrationId, int offeringId);
+    ServiceResult joinWaitlist(int registrationId, int offeringId);
+    ServiceResult leaveWaitlist(int registrationId, int offeringId);
 
-    shared_ptr<Registration> getStudentRegistration(int studentId);
+    shared_ptr<Registration> getRegistration(int registrationId);
     shared_ptr<CourseOffering> getOffering(int offeringId);
     shared_ptr<Course> getCourse(int courseId);
     shared_ptr<Student> getStudent(int studentId);
@@ -49,7 +49,6 @@ private:
     shared_ptr<CourseOfferingRepository> offeringRepo;
     shared_ptr<RegistrationRepository> registrationRepo;
 
-    shared_ptr<Registration> getOrCreateRegistration(int studentId);
     bool hasSameCourseAlready(const Registration& registration, int courseId) const;
     bool hasTimeConflict(const Registration& registration, const CourseOffering& newOffering) const;
 

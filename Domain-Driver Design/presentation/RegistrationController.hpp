@@ -14,11 +14,11 @@ public:
     RegistrationController(const shared_ptr<RegistrationService>& service);
 
     Response<vector<CourseOfferingView>> viewAvailableOfferings(int studentId);
-    Response<ResultView> registerOffering(int studentId, int offeringId);
-    Response<ResultView> drop(int studentId, int offeringId);
-    Response<ResultView> joinWaitlist(int studentId, int offeringId);
-    Response<ResultView> leaveWaitlist(int studentId, int offeringId);
-    Response<StudentRegistrationView> getStudentRegistration(int studentId);
+    Response<ResultView> registerOffering(int registrationId, int offeringId);
+    Response<ResultView> drop(int registrationId, int offeringId);
+    Response<ResultView> joinWaitlist(int registrationId, int offeringId);
+    Response<ResultView> leaveWaitlist(int registrationId, int offeringId);
+    Response<StudentRegistrationView> getStudentRegistration(int registrationId);
     Response<CourseInfoView> courseInfo(int offeringId);
 
 private:

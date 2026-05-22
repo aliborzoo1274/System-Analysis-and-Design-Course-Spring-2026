@@ -49,19 +49,8 @@ vector<shared_ptr<CourseOffering>> RegistrationService::getOfferingsForCourse(in
     return result;
 }
 
-shared_ptr<Registration> RegistrationService::getStudentRegistration(int studentId) {
-    return registrationRepo->findById(studentId);
-}
-
-shared_ptr<Registration> RegistrationService::getOrCreateRegistration(int studentId) {
-    auto registration = registrationRepo->findById(studentId);
-
-    if (!registration) {
-        registration = make_shared<Registration>(studentId, studentId);
-        registrationRepo->save(registration);
-    }
-
-    return registration;
+shared_ptr<Registration> RegistrationService::getRegistration(int registrationId) {
+    return registrationRepo->findById(registrationId);
 }
 
 bool RegistrationService::hasSameCourseAlready(const Registration& registration, int courseId) const {
@@ -94,11 +83,13 @@ bool RegistrationService::hasTimeConflict(const Registration& registration, cons
     return false;
 }
 
-ServiceResult RegistrationService::registerStudent(int studentId, int offeringId) {
-    auto student = getStudent(studentId);
-    if (!student) {
-        return ServiceResult::fail("Student not found.");
+ServiceResult RegistrationService::confirmRegistration(int registrationId, int offeringId) {
+    auto registration = getRegistration(registrationId);
+    if (!registration) {
+        return ServiceResult::fail("Registration not found.");
     }
+
+    auto student = getStudent(registration->getStudentId());
 
     auto offering = getOffering(offeringId);
     if (!offering) {
@@ -117,8 +108,6 @@ ServiceResult RegistrationService::registerStudent(int studentId, int offeringId
     if (!student->hasCompletedPrerequisites(course->getPrerequisiteCourseIds())) {
         return ServiceResult::fail("Prerequisites are not met.");
     }
-
-    auto registration = getOrCreateRegistration(studentId);
 
     if (registration->hasOffering(offeringId)) {
         return ServiceResult::fail("Student already registered for this offering.");
@@ -136,7 +125,7 @@ ServiceResult RegistrationService::registerStudent(int studentId, int offeringId
         return ServiceResult::fail("Offering is full. Use waitlist.");
     }
 
-    if (!offering->registerStudent(studentId)) {
+    if (!offering->confirmRegistration(registrationId)) {
         return ServiceResult::fail("Registration failed.");
     }
 
@@ -147,8 +136,8 @@ ServiceResult RegistrationService::registerStudent(int studentId, int offeringId
     return ServiceResult::ok("Registered successfully.");
 }
 
-ServiceResult RegistrationService::dropStudent(int studentId, int offeringId) {
-    auto registration = registrationRepo->findById(studentId);
+ServiceResult RegistrationService::dropRegistration(int registrationId, int offeringId) {
+    auto registration = getRegistration(registrationId);
     if (!registration) {
         return ServiceResult::fail("Registration not found.");
     }
@@ -158,19 +147,19 @@ ServiceResult RegistrationService::dropStudent(int studentId, int offeringId) {
         return ServiceResult::fail("Offering not found.");
     }
 
-    if (!registration->hasOffering(offeringId) || !offering->isStudentRegistered(studentId)) {
-        return ServiceResult::fail("Student is not registered for this offering.");
+    if (!registration->hasOffering(offeringId) || !offering->isRegistrationConfirmed(registrationId)) {
+        return ServiceResult::fail("Registration is not confirmed for this offering.");
     }
 
-    offering->dropStudent(studentId);
+    offering->dropRegistration(registrationId);
     registration->removeOffering(offeringId);
 
-    if (!offering->getWaitlistStudentIds().empty() && offering->availableSeats() > 0) {
-        int nextStudentId = offering->getWaitlistStudentIds().front();
-        offering->leaveWaitlist(nextStudentId);
-        offering->registerStudent(nextStudentId);
+    if (!offering->getWaitlistRegistrationIds().empty() && offering->availableSeats() > 0) {
+        int nextRegistrationId = offering->getWaitlistRegistrationIds().front();
+        offering->leaveWaitlist(nextRegistrationId);
+        offering->confirmRegistration(nextRegistrationId);
 
-        auto nextRegistration = getOrCreateRegistration(nextStudentId);
+        auto nextRegistration = getRegistration(nextRegistrationId);
         nextRegistration->addOffering(offeringId);
         registrationRepo->save(nextRegistration);
     }
@@ -181,7 +170,14 @@ ServiceResult RegistrationService::dropStudent(int studentId, int offeringId) {
     return ServiceResult::ok("Dropped successfully.");
 }
 
-ServiceResult RegistrationService::joinWaitlist(int studentId, int offeringId) {
+ServiceResult RegistrationService::joinWaitlist(int registrationId, int offeringId) {
+    auto registration = getRegistration(registrationId);
+    if (!registration) {
+        return ServiceResult::fail("Registration not found.");
+    }
+
+    int studentId = registration->getStudentId();
+
     auto student = getStudent(studentId);
     if (!student) {
         return ServiceResult::fail("Student not found.");
@@ -197,12 +193,12 @@ ServiceResult RegistrationService::joinWaitlist(int studentId, int offeringId) {
         return ServiceResult::fail("Course not found.");
     }
 
-    if (offering->isStudentRegistered(studentId)) {
-        return ServiceResult::fail("Student is already registered for this offering.");
+    if (offering->isRegistrationConfirmed(registrationId)) {
+        return ServiceResult::fail("Registration is already confirmed for this offering.");
     }
 
-    if (offering->isStudentWaitlisted(studentId)) {
-        return ServiceResult::fail("Student is already on the waitlist.");
+    if (offering->isRegistrationWaitlisted(registrationId)) {
+        return ServiceResult::fail("Registration is already on the waitlist.");
     }
 
     if (student->hasCompletedCourse(course->getId())) {
@@ -212,8 +208,6 @@ ServiceResult RegistrationService::joinWaitlist(int studentId, int offeringId) {
     if (!student->hasCompletedPrerequisites(course->getPrerequisiteCourseIds())) {
         return ServiceResult::fail("Prerequisites are not met.");
     }
-
-    auto registration = getOrCreateRegistration(studentId);
 
     if (hasSameCourseAlready(*registration, course->getId())) {
         return ServiceResult::fail("Cannot register multiple groups from the same course.");
@@ -227,7 +221,7 @@ ServiceResult RegistrationService::joinWaitlist(int studentId, int offeringId) {
         return ServiceResult::fail("Offering has available seats. Register instead.");
     }
 
-    if (!offering->joinWaitlist(studentId)) {
+    if (!offering->joinWaitlist(registrationId)) {
         return ServiceResult::fail("Waitlist request failed.");
     }
 
@@ -236,17 +230,17 @@ ServiceResult RegistrationService::joinWaitlist(int studentId, int offeringId) {
     return ServiceResult::ok("Added to waitlist.");
 }
 
-ServiceResult RegistrationService::leaveWaitlist(int studentId, int offeringId) {
+ServiceResult RegistrationService::leaveWaitlist(int registrationId, int offeringId) {
     auto offering = getOffering(offeringId);
     if (!offering) {
         return ServiceResult::fail("Offering not found.");
     }
 
-    if (!offering->isStudentWaitlisted(studentId)) {
-        return ServiceResult::fail("Student is not on the waitlist.");
+    if (!offering->isRegistrationWaitlisted(registrationId)) {
+        return ServiceResult::fail("Registration is not on the waitlist.");
     }
 
-    offering->leaveWaitlist(studentId);
+    offering->leaveWaitlist(registrationId);
     offeringRepo->save(offering);
 
     return ServiceResult::ok("Left waitlist.");

@@ -24,6 +24,7 @@ struct ResultView {
 };
 
 struct StudentRegistrationView {
+    int registrationId;
     int studentId;
     string studentName;
     vector<CourseOfferingView> offerings;
