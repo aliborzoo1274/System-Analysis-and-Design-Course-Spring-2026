@@ -18,11 +18,11 @@ void initStudentRepo(shared_ptr<StudentRepository> studentRepo) {
 }
 
 void initCourseRepo(shared_ptr<CourseRepository> courseRepo) {
-	courseRepo->save(make_shared<Course>(101, "CS101", "Intro to CS", vector<int>{}));
-    courseRepo->save(make_shared<Course>(102, "CS102", "Data Structures", vector<int>{101}));
-    courseRepo->save(make_shared<Course>(103, "CS103", "Algorithms", vector<int>{102}));
-    courseRepo->save(make_shared<Course>(201, "CS201", "Operating Systems", vector<int>{103}));
-    courseRepo->save(make_shared<Course>(202, "CS202", "Databases", vector<int>{102}));
+	courseRepo->save(make_shared<Course>(101, "CS101", "Intro to CS", 3, vector<int>{}));
+    courseRepo->save(make_shared<Course>(102, "CS102", "Data Structures", 3, vector<int>{101}));
+    courseRepo->save(make_shared<Course>(103, "CS103", "Algorithms", 3, vector<int>{102}));
+    courseRepo->save(make_shared<Course>(201, "CS201", "Operating Systems", 4, vector<int>{103}));
+    courseRepo->save(make_shared<Course>(202, "CS202", "Databases", 3, vector<int>{102}));
 }
 
 void initOfferingRepo(shared_ptr<CourseOfferingRepository> offeringRepo) {
@@ -74,6 +74,7 @@ void print_offerings(const vector<CourseOfferingView>& offerings) {
 		cout
 			<< offer.offeringId << " | "
 			<< offer.courseCode << " | "
+			<< offer.courseNumOfUnits << " units" << " | "
 			<< offer.classTime << " | "
 			<< offer.examTime << " | "
 			<< "Seats: " << offer.availableSeats
@@ -127,7 +128,8 @@ int main() {
 	auto CourseInfo = controller.courseInfo(4);
 	if (CourseInfo.status == ResponseStatus::Success) {
 		cout << "Course Info: ";
-		cout << CourseInfo.body.courseId << " | " << CourseInfo.body.courseCode << " | " << CourseInfo.body.courseTitle << "\n";
+		cout << CourseInfo.body.courseId << " | " << CourseInfo.body.courseCode << " | ";
+		cout << CourseInfo.body.courseTitle << " | " << CourseInfo.body.courseNumOfUnits << " units" << "\n";
 		cout << "Prerequisites: ";
 		for (int i = 0; i < CourseInfo.body.prerequisites.size() - 1; i++) {
 			cout << CourseInfo.body.prerequisites[i] << " | ";

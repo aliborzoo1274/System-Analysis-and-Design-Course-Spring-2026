@@ -4,8 +4,8 @@ using namespace std;
 
 Course::Course() : id(0) {}
 
-Course::Course(int id, const string& code, const string& title, const vector<int>& prerequisiteCourseIds)
-    : id(id), code(code), title(title), prerequisiteCourseIds(prerequisiteCourseIds) {}
+Course::Course(int id, const string& code, const string& title, int numOfUnits, const vector<int>& prerequisiteCourseIds)
+    : id(id), code(code), title(title), numOfUnits(numOfUnits), prerequisiteCourseIds(prerequisiteCourseIds) {}
 
 int Course::getId() const {
     return id;
@@ -17,6 +17,10 @@ string Course::getCode() const {
 
 string Course::getTitle() const {
     return title;
+}
+
+int Course::getNumOfUnits() const {
+    return numOfUnits;
 }
 
 const vector<int>& Course::getPrerequisiteCourseIds() const {

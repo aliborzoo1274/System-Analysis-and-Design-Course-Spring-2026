@@ -17,6 +17,7 @@ CourseOfferingView RegistrationController::toOfferingView(const shared_ptr<Cours
     view.courseId = offering->getCourseId();
     view.courseCode = course ? course->getCode() : "";
     view.courseTitle = course ? course->getTitle() : "";
+    view.courseNumOfUnits = course->getNumOfUnits();
     view.classTime = offering->getClassTime().toString();
     view.examTime = offering->getExamTime().toString();
     view.capacity = offering->getCapacity();
@@ -123,6 +124,7 @@ Response<CourseInfoView> RegistrationController::courseInfo(int offeringId) {
     view.courseId = course->getId();
     view.courseCode = course->getCode();
     view.courseTitle = course->getTitle();
+    view.courseNumOfUnits = course->getNumOfUnits();
 
     for (int prerequisiteId : course->getPrerequisiteCourseIds()) {
         auto prerequisite = service->getCourse(prerequisiteId);

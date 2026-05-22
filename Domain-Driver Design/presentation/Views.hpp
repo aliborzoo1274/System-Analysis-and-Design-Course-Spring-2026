@@ -10,6 +10,7 @@ struct CourseOfferingView {
     int courseId;
     string courseCode;
     string courseTitle;
+    int courseNumOfUnits;
     string classTime;
     string examTime;
     int capacity;
@@ -32,6 +33,7 @@ struct CourseInfoView {
     int courseId;
     string courseCode;
     string courseTitle;
+    int courseNumOfUnits;
     vector<string> prerequisites;
     vector<CourseOfferingView> offerings;
 };
