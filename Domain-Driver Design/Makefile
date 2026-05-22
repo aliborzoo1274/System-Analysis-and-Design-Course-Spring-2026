@@ -10,6 +10,7 @@ SRC = \
 	data\CourseRepository.cpp \
 	data\CourseOfferingRepository.cpp \
 	data\RegistrationRepository.cpp \
+	domain\AcademicRecord.cpp \
 	domain\ClassTime.cpp \
 	domain\Course.cpp \
 	domain\CourseOffering.cpp \

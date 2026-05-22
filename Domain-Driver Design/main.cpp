@@ -10,8 +10,11 @@
 using namespace std;
 
 void initStudentRepo(shared_ptr<StudentRepository> studentRepo) {
-	studentRepo->save(make_shared<Student>(1, "Ali", vector<int>{101}));
-    studentRepo->save(make_shared<Student>(2, "Amin", vector<int>{}));
+	AcademicRecord record1(unordered_map<int, float>{{101, 18.5}, {103, 19}});
+    AcademicRecord record2(unordered_map<int, float>{});
+
+    studentRepo->save(make_shared<Student>(1, "Ali", record1));
+    studentRepo->save(make_shared<Student>(2, "Amin", record2));
 }
 
 void initCourseRepo(shared_ptr<CourseRepository> courseRepo) {
